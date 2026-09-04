@@ -17,3 +17,5 @@ services:
         sync: false
       - key: LLM_PROVIDER
         value: gemini
+      - key: LOW_MEMORY_MODE
+        value: "true"

@@ -18,6 +18,13 @@ import enum
 
 Base = declarative_base()
 
+try:
+    from dotenv import load_dotenv
+    # Load .env from project root
+    load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), ".env"))
+except ImportError:
+    pass
+
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 DEFAULT_DB_PATH = os.path.join(PROJECT_ROOT, "agentpay.db").replace("\\", "/")
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DEFAULT_DB_PATH}")

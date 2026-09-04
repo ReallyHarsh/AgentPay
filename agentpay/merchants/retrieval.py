@@ -12,14 +12,26 @@ _CATALOG_VECTORS_CACHE = {}  # {tuple_of_product_ids: np.ndarray}
 
 def get_embedder():
     """
-    Singleton loader for SentenceTransformer model.
-    Loads locally without network requests (local_files_only=True).
-    Falls back gracefully to TF-IDF vectorizer if needed.
+    Singleton loader for semantic search engine.
+    If LOW_MEMORY_MODE=true or running in cloud containers (e.g. Render free tier 512MB RAM),
+    uses fast TF-IDF vectorizer (<25MB RAM).
+    Otherwise, loads SentenceTransformers (all-MiniLM-L6-v2).
     """
     global _EMBEDDER_INSTANCE
     if _EMBEDDER_INSTANCE is None:
+        import os
+        # Automatically detect Render or memory-constrained container environments
+        is_cloud_constrained = (
+            os.getenv("LOW_MEMORY_MODE", "").lower() in ["true", "1", "yes"] or
+            os.getenv("RENDER") is not None or
+            os.getenv("RENDER_SERVICE_ID") is not None
+        )
+        if is_cloud_constrained:
+            from sklearn.feature_extraction.text import TfidfVectorizer
+            _EMBEDDER_INSTANCE = TfidfVectorizer(ngram_range=(1, 2), stop_words="english")
+            return _EMBEDDER_INSTANCE
+
         try:
-            import os
             os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
             os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
             from sentence_transformers import SentenceTransformer
