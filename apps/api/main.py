@@ -72,6 +72,18 @@ app.include_router(webhooks.router, prefix="/api/v1")
 app.include_router(mcp.router, prefix="/api/v1")
 
 
+@app.get("/", tags=["Root"])
+def root():
+    return {
+        "service": "AgentPay API",
+        "status": "ONLINE",
+        "version": "1.1.0",
+        "docs_url": "/docs",
+        "health_url": "/api/v1/health",
+        "description": "Trust and Payment-Control Layer for Autonomous AI Commerce"
+    }
+
+
 @app.get("/api/v1/health", tags=["Health"])
 def health_check():
     return {
