@@ -13,31 +13,48 @@ export function FloatingNav() {
 
   useEffect(() => {
     const loadPolicy = () => {
+      let savedPolicy: any = null;
       try {
         const saved = localStorage.getItem('agentpay_custom_policy');
         if (saved) {
-          const parsed = JSON.parse(saved);
-          setPolicy(parsed);
-          return;
+          savedPolicy = JSON.parse(saved);
         }
       } catch (e) {
         console.error('Failed to read custom policy', e);
       }
 
-      fetchAgentPolicy()
-        .then(p => setPolicy(p))
+      fetchAgentPolicy('agent_001')
+        .then(live => {
+          const daily = savedPolicy?.daily_spending_limit ?? live.daily_spending_limit ?? 20000;
+          const spent = Math.max(savedPolicy?.spent_today ?? 0, live.spent_today ?? 0);
+          const reserved = live.currently_reserved ?? 0;
+          const available = Math.max(0, daily - (spent + reserved));
+          const merged = {
+            ...live,
+            ...savedPolicy,
+            daily_spending_limit: daily,
+            spent_today: spent,
+            currently_reserved: reserved,
+            available_budget: available
+          };
+          setPolicy(merged);
+        })
         .catch(() => {
-          setPolicy({
-            id: 'policy_001',
-            agent_id: 'agent_001',
-            currency: 'INR',
-            per_transaction_limit: 5000,
-            daily_spending_limit: 20000,
-            spent_today: 12499,
-            available_budget: 7501,
-            allowed_categories: ['electronics', 'audio'],
-            blocked_merchants: []
-          });
+          if (savedPolicy) {
+            setPolicy(savedPolicy);
+          } else {
+            setPolicy({
+              id: 'policy_001',
+              agent_id: 'agent_001',
+              currency: 'INR',
+              per_transaction_limit: 5000,
+              daily_spending_limit: 20000,
+              spent_today: 0,
+              available_budget: 20000,
+              allowed_categories: ['electronics', 'audio', 'accessories'],
+              blocked_merchants: []
+            });
+          }
         });
     };
 

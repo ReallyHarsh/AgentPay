@@ -51,46 +51,55 @@ export default function ControlPage() {
   const [simMerchant, setSimMerchant] = useState('Croma Electronics Hub');
   const [showSimTrail, setShowSimTrail] = useState(false);
 
-  // Load policy on mount
+  // Load policy on mount and on policy update events
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem('agentpay_custom_policy');
-      if (saved) {
-        const p = JSON.parse(saved);
-        setDailyLimit(p.daily_spending_limit || 20000);
-        setPerTxLimit(p.per_transaction_limit || 5000);
-        if (p.spent_today !== undefined) setSpentToday(p.spent_today);
-        if (p.allowed_categories) {
-          setCategories(prev => prev.map(c => ({
-            ...c,
-            allowed: p.allowed_categories.includes(c.id)
-          })));
+    const loadPolicy = () => {
+      let savedPolicy: any = null;
+      try {
+        const saved = localStorage.getItem('agentpay_custom_policy');
+        if (saved) {
+          savedPolicy = JSON.parse(saved);
+          if (savedPolicy.daily_spending_limit) setDailyLimit(savedPolicy.daily_spending_limit);
+          if (savedPolicy.per_transaction_limit) setPerTxLimit(savedPolicy.per_transaction_limit);
+          if (savedPolicy.spent_today !== undefined) setSpentToday(savedPolicy.spent_today);
+          if (savedPolicy.allowed_categories) {
+            setCategories(prev => prev.map(c => ({
+              ...c,
+              allowed: savedPolicy.allowed_categories.includes(c.id)
+            })));
+          }
+          if (savedPolicy.merchant_rules) {
+            setMerchants(savedPolicy.merchant_rules);
+          }
         }
-        if (p.merchant_rules) {
-          setMerchants(p.merchant_rules);
-        }
-        return;
+      } catch (e) {
+        console.error('Failed to read saved policy', e);
       }
-    } catch (e) {
-      console.error('Failed to read saved policy', e);
-    }
 
-    fetchAgentPolicy()
-      .then((p) => {
-        setPolicy(p);
-        setPerTxLimit(p.per_transaction_limit || 5000);
-        setDailyLimit(p.daily_spending_limit || 20000);
-        if (p.spent_today !== undefined) setSpentToday(p.spent_today);
-        if (p.allowed_categories) {
-          setCategories(prev => prev.map(c => ({
-            ...c,
-            allowed: p.allowed_categories.includes(c.id)
-          })));
-        }
-      })
-      .catch(() => {
-        // defaults already initialized
-      });
+      fetchAgentPolicy('agent_001')
+        .then((p) => {
+          setPolicy(p);
+          if (!savedPolicy?.per_transaction_limit && p.per_transaction_limit) {
+            setPerTxLimit(p.per_transaction_limit);
+          }
+          if (!savedPolicy?.daily_spending_limit && p.daily_spending_limit) {
+            setDailyLimit(p.daily_spending_limit);
+          }
+          const liveSpent = Math.max(savedPolicy?.spent_today ?? 0, p.spent_today ?? 0);
+          setSpentToday(liveSpent);
+        })
+        .catch(() => {
+          // defaults already initialized
+        });
+    };
+
+    loadPolicy();
+    window.addEventListener('agentpay-policy-updated', loadPolicy);
+    window.addEventListener('storage', loadPolicy);
+    return () => {
+      window.removeEventListener('agentpay-policy-updated', loadPolicy);
+      window.removeEventListener('storage', loadPolicy);
+    };
   }, []);
 
   // Save current limits and rules to localStorage and API

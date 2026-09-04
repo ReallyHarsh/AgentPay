@@ -51,6 +51,8 @@ export default function ChatPage() {
     try {
       const p = await fetchAgentPolicy('agent_001');
       setLivePolicy(p);
+      localStorage.setItem('agentpay_custom_policy', JSON.stringify(p));
+      window.dispatchEvent(new Event('agentpay-policy-updated'));
     } catch (e) {
       console.error('Failed to fetch live policy', e);
     }
@@ -87,11 +89,18 @@ export default function ChatPage() {
           postAvailable,
           finalAvailable
         });
-        setLivePolicy(prev => prev ? {
-          ...prev,
-          available_budget: finalAvailable,
-          currently_reserved: 0
-        } : prev);
+        setLivePolicy(prev => {
+          const updated = prev ? {
+            ...prev,
+            available_budget: finalAvailable,
+            currently_reserved: 0
+          } : prev;
+          if (updated) {
+            localStorage.setItem('agentpay_custom_policy', JSON.stringify(updated));
+            window.dispatchEvent(new Event('agentpay-policy-updated'));
+          }
+          return updated;
+        });
 
         setTimeout(() => {
           setActiveReserveAnimation(null);
@@ -104,12 +113,19 @@ export default function ChatPage() {
           postAvailable,
           finalAvailable
         });
-        setLivePolicy(prev => prev ? {
-          ...prev,
-          available_budget: finalAvailable,
-          currently_reserved: 0,
-          spent_today: (prev.spent_today || 0) + amount
-        } : prev);
+        setLivePolicy(prev => {
+          const updated = prev ? {
+            ...prev,
+            available_budget: finalAvailable,
+            currently_reserved: 0,
+            spent_today: (prev.spent_today || 0) + amount
+          } : prev;
+          if (updated) {
+            localStorage.setItem('agentpay_custom_policy', JSON.stringify(updated));
+            window.dispatchEvent(new Event('agentpay-policy-updated'));
+          }
+          return updated;
+        });
 
         setTimeout(() => {
           setActiveReserveAnimation(null);

@@ -26,35 +26,56 @@ export default function MerchantsCatalogPage() {
   // Load custom policy or fallback
   useEffect(() => {
     const loadPolicy = () => {
+      let savedPolicy: any = null;
       try {
         const saved = localStorage.getItem('agentpay_custom_policy');
         if (saved) {
-          setPolicy(JSON.parse(saved));
-          return;
+          savedPolicy = JSON.parse(saved);
         }
       } catch (e) {
         console.error(e);
       }
-      fetchAgentPolicy()
-        .then(p => setPolicy(p))
-        .catch(() => {
+      fetchAgentPolicy('agent_001')
+        .then(live => {
+          const daily = savedPolicy?.daily_spending_limit ?? live.daily_spending_limit ?? 20000;
+          const spent = Math.max(savedPolicy?.spent_today ?? 0, live.spent_today ?? 0);
+          const reserved = live.currently_reserved ?? 0;
+          const available = Math.max(0, daily - (spent + reserved));
           setPolicy({
-            id: 'policy_001',
-            agent_id: 'agent_001',
-            currency: 'INR',
-            per_transaction_limit: 5000,
-            daily_spending_limit: 20000,
-            spent_today: 12499,
-            available_budget: 7501,
-            allowed_categories: ['electronics', 'audio'],
-            blocked_merchants: []
+            ...live,
+            ...savedPolicy,
+            daily_spending_limit: daily,
+            spent_today: spent,
+            currently_reserved: reserved,
+            available_budget: available
           });
+        })
+        .catch(() => {
+          if (savedPolicy) {
+            setPolicy(savedPolicy);
+          } else {
+            setPolicy({
+              id: 'policy_001',
+              agent_id: 'agent_001',
+              currency: 'INR',
+              per_transaction_limit: 5000,
+              daily_spending_limit: 20000,
+              spent_today: 0,
+              available_budget: 20000,
+              allowed_categories: ['electronics', 'audio', 'accessories'],
+              blocked_merchants: []
+            });
+          }
         });
     };
 
     loadPolicy();
     window.addEventListener('agentpay-policy-updated', loadPolicy);
-    return () => window.removeEventListener('agentpay-policy-updated', loadPolicy);
+    window.addEventListener('storage', loadPolicy);
+    return () => {
+      window.removeEventListener('agentpay-policy-updated', loadPolicy);
+      window.removeEventListener('storage', loadPolicy);
+    };
   }, []);
 
   // Fetch live products from the FastAPI SQLite/PostgreSQL database

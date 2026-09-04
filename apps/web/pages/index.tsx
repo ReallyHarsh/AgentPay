@@ -1499,6 +1499,36 @@ export default function ContinuousBuyJourney() {
       } : null);
       setCurrentStage('receipt');
 
+      // Dynamically deduct purchase amount from active budget and sync across entire UI
+      try {
+        let currentPolicy = {
+          id: 'policy_001',
+          agent_id: 'agent_001',
+          currency: 'INR',
+          per_transaction_limit: 5000,
+          daily_spending_limit: 20000,
+          spent_today: 0,
+          available_budget: 20000,
+          allowed_categories: ['electronics', 'audio', 'accessories'],
+          blocked_merchants: []
+        };
+        const saved = localStorage.getItem('agentpay_custom_policy');
+        if (saved) {
+          try { currentPolicy = { ...currentPolicy, ...JSON.parse(saved) }; } catch (e) {}
+        }
+        const newSpent = (currentPolicy.spent_today || 0) + story.authPrice;
+        const newAvailable = Math.max(0, (currentPolicy.daily_spending_limit || 20000) - newSpent);
+        const updatedPolicy = {
+          ...currentPolicy,
+          spent_today: newSpent,
+          available_budget: newAvailable
+        };
+        localStorage.setItem('agentpay_custom_policy', JSON.stringify(updatedPolicy));
+        window.dispatchEvent(new Event('agentpay-policy-updated'));
+      } catch (e) {
+        console.error('Failed to sync budget balance', e);
+      }
+
       // Cache settled purchase and its audit events to localStorage for Evidence / Audit Trail
       try {
         const existing = JSON.parse(localStorage.getItem('agentpay_recent_orders') || '[]');
