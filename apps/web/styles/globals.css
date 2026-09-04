@@ -1,0 +1,247 @@
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..800;1,300..800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --pointer-x: 50%;
+    --pointer-y: 50%;
+  }
+
+  body {
+    background: radial-gradient(circle at 16% 14%, rgba(254, 115, 82, 0.12), transparent 28rem),
+                radial-gradient(circle at 86% 78%, rgba(170, 54, 26, 0.08), transparent 30rem),
+                #FBF9F9;
+    color: #1B1C1C;
+    font-family: 'Hanken Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+}
+
+/* Material Symbols */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.material-symbols-outlined.fill-1 {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Kinetic Living Wordmark */
+.agentpay-wordmark {
+  color: transparent;
+  background: radial-gradient(
+    42rem circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+    #FE7352 0%,
+    #AA361A 22%,
+    #1B1C1C 58%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  transition: background 180ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  letter-spacing: -0.055em;
+  line-height: 1.02;
+  padding-top: 0.06em;
+  padding-bottom: 0.06em;
+  overflow: visible;
+  user-select: none;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+.dark body {
+  background: radial-gradient(circle at 16% 14%, rgba(254, 115, 82, 0.15), transparent 28rem),
+              radial-gradient(circle at 86% 78%, rgba(170, 54, 26, 0.12), transparent 30rem),
+              #0E0D0D;
+  color: #F5F3F3;
+}
+
+.dark .agentpay-wordmark {
+  background: radial-gradient(
+    42rem circle at var(--pointer-x, 50%) var(--pointer-y, 50%),
+    #FE7352 0%,
+    #FF8A65 24%,
+    #FFFFFF 62%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+/* Kinetic Glass Surfaces */
+.glass-surface {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75), 0 18px 60px rgba(39, 22, 16, 0.07);
+  backdrop-filter: blur(18px) saturate(130%);
+  -webkit-backdrop-filter: blur(18px) saturate(130%);
+}
+
+.dark .glass-surface {
+  background: rgba(22, 21, 21, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 18px 60px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 12px 40px rgba(27, 28, 28, 0.06);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+}
+
+.dark .glass-nav {
+  background: rgba(18, 17, 17, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 12px 40px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+}
+
+.glass-sheet {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 24px 80px rgba(39, 22, 16, 0.1);
+  backdrop-filter: blur(24px) saturate(130%);
+  -webkit-backdrop-filter: blur(24px) saturate(130%);
+}
+
+.dark .glass-sheet {
+  background: rgba(22, 20, 20, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 24px 80px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(28px) saturate(140%);
+  -webkit-backdrop-filter: blur(28px) saturate(140%);
+}
+
+/* Contrast-controlled Solid Cards for Financial Content */
+.paper-card {
+  background: #FFFFFF;
+  border: 1px solid #E4E2E2;
+  box-shadow: 0 4px 30px rgba(27, 28, 28, 0.04);
+  border-radius: 1rem;
+}
+
+.dark .paper-card {
+  background: #171616 !important;
+  border: 1px solid rgba(255, 255, 255, 0.09) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+  color: #F5F3F3;
+}
+
+.paper-card-subtle {
+  background: #FDFBFB;
+  border: 1px solid #ECEAE9;
+  border-radius: 0.75rem;
+}
+
+.dark .paper-card-subtle {
+  background: #1A1919 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #F5F3F3;
+}
+
+/* Universal Dark Mode Safety Overrides for Palette Tokens */
+.dark .text-\[\#1B1C1C\],
+.dark .text-\[\#2C292A\] {
+  color: #F5F3F3 !important;
+}
+
+.dark .text-\[\#4C4546\] {
+  color: #C5BFBF !important;
+}
+
+.dark .text-\[\#7E7576\] {
+  color: #9E9697 !important;
+}
+
+.dark .border-\[\#E4E2E2\],
+.dark .border-\[\#ECEAE9\] {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.dark .bg-white\/70,
+.dark .bg-white\/80 {
+  background-color: #1E1C1C !important;
+}
+
+/* Vertical Progression Thread */
+.thread-line {
+  position: absolute;
+  top: 1.25rem;
+  bottom: 1.25rem;
+  left: 1.25rem;
+  width: 1px;
+  background: #E4E2E2;
+  z-index: 0;
+}
+
+.dark .thread-line {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* Accessibility: Reduced Transparency & Motion Fallbacks */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-surface,
+  .glass-nav,
+  .glass-sheet {
+    background: #FFFFFF !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border: 1px solid #E4E2E2 !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agentpay-wordmark {
+    background: #1B1C1C !important;
+    background-clip: text !important;
+    -webkit-background-clip: text !important;
+    border-bottom: 2px solid #AA361A;
+    transition: none !important;
+  }
+  .pulse-ring,
+  .shimmer-active {
+    animation: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Custom Soft Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E4E2E2;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C6C6C6;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #333030;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4A4646;
+}
+

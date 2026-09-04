@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "agentpay": {
+      "command": "python",
+      "args": [
+        "-m",
+        "apps.mcp_server"
+      ],
+      "env": {
+        "PYTHONPATH": "."
+      }
+    }
+  }
+}
