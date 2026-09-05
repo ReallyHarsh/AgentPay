@@ -122,7 +122,9 @@ agentpay/
 │   └── database/
 ├── tests/
 ├── docs/
-│   └── spec.md                # full product/technical spec
+│   ├── spec.md                # full product/technical spec
+│   ├── pitch_script.md        # 5-minute video pitch script
+│   └── architecture_diagrams.md # mermaid diagrams for excalidraw
 └── README.md
 ```
 
@@ -183,6 +185,14 @@ DATABASE_URL=sqlite:///./agentpay.db
 
 These are scope decisions, not gaps — the goal of this build is to prove the
 authorization boundary works, not to replicate a production commerce platform.
+
+---
+
+## Documentation
+
+- [Product Spec](docs/spec.md)
+- [Pitch Script](docs/pitch_script.md)
+- [Architecture Diagrams](docs/architecture_diagrams.md)
 
 ---
 

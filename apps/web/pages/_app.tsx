@@ -13,7 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
           name="description"
           content="Autonomous AI commerce with deterministic financial guardrails and visible Razorpay settlement."
         />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
